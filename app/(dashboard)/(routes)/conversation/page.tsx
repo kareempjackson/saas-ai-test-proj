@@ -55,10 +55,16 @@ const ConversationPage = () => {
                   </FormItem>
                 )}
               />
-              <Button className="col-span-12 lg:col-span-2">Generate</Button>
+              <Button
+                className="col-span-12 lg:col-span-2 w-full"
+                disabled={isLoading}
+              >
+                Generate
+              </Button>
             </form>
           </Form>
         </div>
+        <div className="space-y-4 mt-4">Messages Content</div>
       </div>
     </div>
   );
