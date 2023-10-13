@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 
 import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { checkSubscription } from "@/lib/subscription";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -27,8 +28,9 @@ export async function POST(req: Request) {
     }
 
     const freeTrial = await checkApiLimit();
+    const isPro = await checkSubscription();
 
-    if (!freeTrial) {
+    if (!freeTrial && !isPro) {
       return new NextResponse("Free trial has expired", { status: 403 });
     }
 
@@ -37,7 +39,10 @@ export async function POST(req: Request) {
       model: "gpt-3.5-turbo",
     });
 
-    await increaseApiLimit();
+    if (!isPro) {
+      await increaseApiLimit();
+    }
+
     return NextResponse.json(response.choices[0].message);
   } catch (error) {
     console.log("[CONVERSATION_ERROR]", error);
