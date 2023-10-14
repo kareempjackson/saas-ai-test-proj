@@ -19,6 +19,7 @@ import { useState } from "react";
 import ChatCompletionRequestMessage from "openai";
 import { cn } from "@/lib/utils";
 import { useProModal } from "@/hooks/use-pro-modal";
+import { toast } from "react-hot-toast";
 
 const ConversationPage = () => {
   const router = useRouter();
@@ -51,6 +52,8 @@ const ConversationPage = () => {
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
+      } else {
+        toast.error("Something went wrong");
       }
     } finally {
       router.refresh();

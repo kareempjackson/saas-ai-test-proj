@@ -24,6 +24,7 @@ import { useProModal } from "@/hooks/use-pro-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "react-hot-toast";
 
 export const ProModal = () => {
   const proModal = useProModal();
@@ -33,11 +34,10 @@ export const ProModal = () => {
     try {
       setLoading(true);
       const response = await axios.get("/api/stripe");
-      console.log("-->> response", response);
 
       window.location.href = response.data.url;
     } catch (error: any) {
-      console.log(error, "STRIPE_CLIENT_ERROR ");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ export const ProModal = () => {
             size="lg"
             variant="premium"
             className="w-full"
-            onClick={() => onSubscribe()}
+            onClick={onSubscribe}
           >
             Upgrade to Genius Pro
             <Zap className="w-4 h-4 ml-2 fill-white" />
